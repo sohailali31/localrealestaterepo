@@ -1,13 +1,12 @@
 import axios from "axios";
 
-const API_URL = "http://195.35.45.56:5858/api/files/upload";
+// ✅ Use Vite environment variable for API base URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-
-//  inserting data into database 
+// Upload file
 export const addData = async (formData) => {
   try {
-    // Make POST request with multipart/form-data
-    const response = await axios.post(API_URL, formData, {
+    const response = await axios.post(`${API_BASE_URL}/files/upload`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -15,45 +14,28 @@ export const addData = async (formData) => {
     return response;
   } catch (error) {
     console.error("Error uploading data:", error);
-    throw error; // throw to handle it in React
+    throw error;
   }
-
-
-
 };
 
-//  fetch all data from database 
-export const fetchRecords=async()=>{
+// Fetch all data
+export const fetchRecords = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/files/all`);
+    return response;
+  } catch (error) {
+    console.error("Error fetching records:", error);
+    throw error;
+  }
+};
 
-       try{
-
-                       const response=await axios.get("http://195.35.45.56:5858/api/files/all");
-
-                       return response;
-       }catch(error){
-
-        console.log("Error fetching records:", error);
-        throw error;
-       }
-
-
-
-
-}
-
-
-// deleteing record from database through id
-
-export const deleteRecordsById=async(id)=>{
-
-    try{
-               const response=await axios.delete("http://195.35.45.56:5858/api/files/delete"+"/"+id)
-
-               return response;
-    }catch(error){
-
-      console.log("error while deleting file");
-      throw error;
-
-   }
-}
+// Delete record by ID
+export const deleteRecordsById = async (id) => {
+  try {
+    const response = await axios.delete(`${API_BASE_URL}/files/delete/${id}`);
+    return response;
+  } catch (error) {
+    console.error("Error while deleting file:", error);
+    throw error;
+  }
+};
